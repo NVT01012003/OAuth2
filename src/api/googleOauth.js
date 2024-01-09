@@ -37,5 +37,5 @@ googleOauth.get("/callback", async (req, res) => {
     });
 });
 googleOauth.get("/", (req, res) => {
-    res.status(301).redirect(authorizationUrl);
+    res.status(200).redirect(authorizationUrl);
 });
