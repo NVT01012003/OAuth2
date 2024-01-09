@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { facebookLoginUrl } from "../Oauthapi/facebook.js";
+import { authorizationUrl, redirect_uri } from "../Oauthapi/facebook.js";
 import axios from "axios";
 
 export const facebookOauth = Router();
 let userInfo = null;
 async function getAccessTokenFromCode(code) {
     const { data } = await axios({
-        url: "https://graph.facebook.com/v16.0/oauth/access_token",
+        url: "https://graph.facebook.com/v18.0/oauth/access_token",
         method: "get",
         params: {
             client_id: process.env.FACEBOOK_CLIENT_ID,
@@ -40,6 +40,9 @@ facebookOauth.get("/callback", async (req, res) => {
         data,
     });
 });
+facebookOauth.get("/hello", (req, res) =>
+    res.status(200).json({ message: "OK" })
+);
 facebookOauth.get("/", (req, res) => {
-    res.status(301).redirect(facebookLoginUrl);
+    res.status(200).json({ authorizationUrl });
 });
