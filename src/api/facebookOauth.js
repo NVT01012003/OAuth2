@@ -11,7 +11,7 @@ async function getAccessTokenFromCode(code) {
         params: {
             client_id: process.env.FACEBOOK_CLIENT_ID,
             client_secret: process.env.FACEBOOK_CLIENT_SECRET,
-            redirect_uri: "http://localhost:3000/auth/facebook/callback",
+            redirect_uri,
             code,
         },
     });
@@ -36,14 +36,10 @@ facebookOauth.get("/callback", async (req, res) => {
     const access_token = await getAccessTokenFromCode(code);
     const data = await getFacebookUserData(access_token);
     userInfo = data;
-    res.redirect("/auth/facebook/welcome");
+    res.status(200).json({
+        data,
+    });
 });
 facebookOauth.get("/", (req, res) => {
     res.status(301).redirect(facebookLoginUrl);
-});
-facebookOauth.get("/welcome", (req, res) => {
-    res.json({
-        welcome: userInfo.first_name + " " + userInfo.last_name,
-        userInfo,
-    });
 });
